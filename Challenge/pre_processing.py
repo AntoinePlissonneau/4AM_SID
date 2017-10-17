@@ -8,13 +8,12 @@ Created on Sat Oct 14 13:57:41 2017
 import numpy as np 
 import pandas as pd
 import datetime as dt
-import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
 # Importing the dataset
 
 dataset = pd.read_csv('./Dataset/train_1.csv', sep=";", decimal = ",")
-dataset = pd.read_csv('./Dataset/tes.csv', sep=";")
 
 dataset["ddH10_rose4"] = dataset["ddH10_rose4"].astype(np.float64)
 
@@ -36,13 +35,30 @@ dataset.drop('mois', axis=1, inplace=True)
 # Dealing with missing data
 #l'objet groupby se compose de key et de l'item : key correspond a ce que l'on a groupé
 #alors que l'item est un sous dataframe issue de notre key.
+
 colonne = dataset.columns.difference(["insee","month"])
 for col in colonne :
     dataset[col] = dataset.groupby(['insee','month']).transform(lambda x: x.fillna(x.mean()))[col]
+
+
+# Standardization
+
+dataset["huH2"] = dataset["huH2"].values / 100
+
 
 # X and y 
 X = dataset[dataset.columns.difference(["tH2_obs","ordinal_date"])].values
 y = dataset["tH2_obs"].values
 
+#splitting 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
 
-    
+sc_X = StandardScaler()
+X_train = sc_X.fit_transform(X_train)
+X_test = sc_X.transform(X_test)
+sc_y = StandardScaler()
+y_train = sc_y.fit_transform(y_train)
+
+
+
+
