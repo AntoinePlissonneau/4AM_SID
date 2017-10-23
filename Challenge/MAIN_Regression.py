@@ -1,17 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Oct 22 17:14:40 2017
-
-@author: AntoineP
-"""
 
 #Main
 
 import pandas as pd
+import pre_processing as pre
 from sklearn import linear_model
-from sklearn import preprocessing as p
-import Soumission as s
+import Soumission as s 
 
 #######################################################
 #          PARTIE D'EVALUATION DU MODELE              #
@@ -19,7 +14,7 @@ import Soumission as s
 #######################################################
 
 dataset = pd.read_csv('./Datasets/PP_train.csv', sep=";", decimal = ",")
-d = s.DataSet(dataset)
+d = pre.DataSet(dataset)
 reg = linear_model.LinearRegression(normalize = True)
 reg.fit (d.X_train, d.y_train)
 
@@ -43,7 +38,7 @@ test = pd.read_csv('./Datasets/PP_test.csv', sep=";", decimal = ",")
 
 
 
-d = s.DataSet(train,test)
+d = pre.DataSet(train,test)
 
 reg = linear_model.LinearRegression(normalize = True)
 reg.fit (d.X_train, d.y_train)
